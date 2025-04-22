@@ -1,0 +1,205 @@
+-- Create the main frame
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "KeySystem"
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
+MainFrame.Size = UDim2.new(0, 350, 0, 200)
+MainFrame.Position = UDim2.new(0.5, -175, 0.5, -100)
+MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+MainFrame.BorderSizePixel = 0
+MainFrame.ClipsDescendants = true
+
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 8)
+UICorner.Parent = MainFrame
+
+local TopBar = Instance.new("Frame")
+TopBar.Name = "TopBar"
+TopBar.Size = UDim2.new(1, 0, 0, 30)
+TopBar.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+TopBar.BorderSizePixel = 0
+
+local UICorner2 = Instance.new("UICorner")
+UICorner2.CornerRadius = UDim.new(0, 8)
+UICorner2.Parent = TopBar
+
+local Title = Instance.new("TextLabel")
+Title.Name = "Title"
+Title.Size = UDim2.new(1, 0, 1, 0)
+Title.BackgroundTransparency = 1
+Title.Text = "Key System"
+Title.Font = Enum.Font.GothamSemibold
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextSize = 14
+
+local CloseButton = Instance.new("TextButton")
+CloseButton.Name = "CloseButton"
+CloseButton.Size = UDim2.new(0, 30, 0, 30)
+CloseButton.Position = UDim2.new(1, -30, 0, 0)
+CloseButton.BackgroundTransparency = 1
+CloseButton.Text = "X"
+CloseButton.Font = Enum.Font.GothamBold
+CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseButton.TextSize = 14
+
+local Content = Instance.new("Frame")
+Content.Name = "Content"
+Content.Size = UDim2.new(1, -20, 1, -50)
+Content.Position = UDim2.new(0, 10, 0, 40)
+Content.BackgroundTransparency = 1
+
+local KeyEntry = Instance.new("TextBox")
+KeyEntry.Name = "KeyEntry"
+KeyEntry.Size = UDim2.new(1, 0, 0, 40)
+KeyEntry.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+KeyEntry.BorderSizePixel = 0
+KeyEntry.Font = Enum.Font.Gotham
+KeyEntry.PlaceholderText = "Enter key here..."
+KeyEntry.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
+KeyEntry.Text = ""
+KeyEntry.TextColor3 = Color3.fromRGB(255, 255, 255)
+KeyEntry.TextSize = 14
+
+local UICorner3 = Instance.new("UICorner")
+UICorner3.CornerRadius = UDim.new(0, 6)
+UICorner3.Parent = KeyEntry
+
+local SubmitButton = Instance.new("TextButton")
+SubmitButton.Name = "SubmitButton"
+SubmitButton.Size = UDim2.new(1, 0, 0, 35)
+SubmitButton.Position = UDim2.new(0, 0, 0, 50)
+SubmitButton.BackgroundColor3 = Color3.fromRGB(70, 120, 200)
+SubmitButton.BorderSizePixel = 0
+SubmitButton.Font = Enum.Font.GothamSemibold
+SubmitButton.Text = "SUBMIT"
+SubmitButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+SubmitButton.TextSize = 14
+
+local UICorner4 = Instance.new("UICorner")
+UICorner4.CornerRadius = UDim.new(0, 6)
+UICorner4.Parent = SubmitButton
+
+local GetKeyButton = Instance.new("TextButton")
+GetKeyButton.Name = "GetKeyButton"
+GetKeyButton.Size = UDim2.new(1, 0, 0, 25)
+GetKeyButton.Position = UDim2.new(0, 0, 0, 95)
+GetKeyButton.BackgroundTransparency = 1
+GetKeyButton.Font = Enum.Font.Gotham
+GetKeyButton.Text = "Get Key"
+GetKeyButton.TextColor3 = Color3.fromRGB(100, 150, 255)
+GetKeyButton.TextSize = 12
+
+-- Assemble the UI
+TopBar.Parent = MainFrame
+Title.Parent = TopBar
+CloseButton.Parent = TopBar
+Content.Parent = MainFrame
+KeyEntry.Parent = Content
+SubmitButton.Parent = Content
+GetKeyButton.Parent = Content
+MainFrame.Parent = ScreenGui
+
+-- Animation effects
+local TweenService = game:GetService("TweenService")
+
+local function ButtonEffect(button)
+    local originalSize = button.Size
+    local originalPos = button.Position
+    local originalColor = button.BackgroundColor3
+    
+    button.MouseEnter:Connect(function()
+        if button.BackgroundTransparency < 1 then
+            TweenService:Create(button, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(90, 140, 220)}):Play()
+        else
+            TweenService:Create(button, TweenInfo.new(0.1), {TextColor3 = Color3.fromRGB(120, 170, 255)}):Play()
+        end
+    end)
+    
+    button.MouseLeave:Connect(function()
+        if button.BackgroundTransparency < 1 then
+            TweenService:Create(button, TweenInfo.new(0.1), {BackgroundColor3 = originalColor}):Play()
+        else
+            TweenService:Create(button, TweenInfo.new(0.1), {TextColor3 = originalColor}):Play()
+        end
+    end)
+    
+    button.MouseButton1Down:Connect(function()
+        if button.BackgroundTransparency < 1 then
+            TweenService:Create(button, TweenInfo.new(0.1), {Size = originalSize - UDim2.new(0, 5, 0, 5)}):Play()
+        end
+    end)
+    
+    button.MouseButton1Up:Connect(function()
+        if button.BackgroundTransparency < 1 then
+            TweenService:Create(button, TweenInfo.new(0.1), {Size = originalSize}):Play()
+        end
+    end)
+end
+
+-- Apply effects to buttons
+ButtonEffect(SubmitButton)
+ButtonEffect(GetKeyButton)
+ButtonEffect(CloseButton)
+
+-- Functionality
+GetKeyButton.MouseButton1Click:Connect(function()
+    setclipboard("https://discord.gg/wHqn5eGCsU")
+    
+    local notification = Instance.new("TextLabel")
+    notification.Name = "Notification"
+    notification.Size = UDim2.new(1, -20, 0, 30)
+    notification.Position = UDim2.new(0, 10, 1, -40)
+    notification.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+    notification.BorderSizePixel = 0
+    notification.Font = Enum.Font.Gotham
+    notification.Text = "Copied Discord link to clipboard!"
+    notification.TextColor3 = Color3.fromRGB(255, 255, 255)
+    notification.TextSize = 12
+    notification.Visible = false
+    notification.Parent = MainFrame
+    
+    local UICorner5 = Instance.new("UICorner")
+    UICorner5.CornerRadius = UDim.new(0, 6)
+    UICorner5.Parent = notification
+    
+    notification.Visible = true
+    TweenService:Create(notification, TweenInfo.new(0.2), {Position = UDim2.new(0, 10, 1, -80)}):Play()
+    
+    wait(3)
+    
+    TweenService:Create(notification, TweenInfo.new(0.2), {Position = UDim2.new(0, 10, 1, -40)}):Play()
+    wait(0.2)
+    notification:Destroy()
+end)
+
+SubmitButton.MouseButton1Click:Connect(function()
+    if KeyEntry.Text == "saltyer" then
+        -- Correct key
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/itsnotdasher/Voluted-Hub-V-1.1/refs/heads/main/balls"))()
+        ScreenGui:Destroy()
+    else
+        -- Incorrect key
+        local originalColor = KeyEntry.BackgroundColor3
+        TweenService:Create(KeyEntry, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(80, 40, 40)}):Play()
+        wait(0.5)
+        TweenService:Create(KeyEntry, TweenInfo.new(0.3), {BackgroundColor3 = originalColor}):Play()
+    end
+end)
+
+CloseButton.MouseButton1Click:Connect(function()
+    TweenService:Create(MainFrame, TweenInfo.new(0.2), {Size = UDim2.new(0, 350, 0, 0)}):Play()
+    wait(0.2)
+    ScreenGui:Destroy()
+end)
+
+-- Initial animation
+MainFrame.Size = UDim2.new(0, 350, 0, 0)
+MainFrame.Visible = true
+TweenService:Create(MainFrame, TweenInfo.new(0.3), {Size = UDim2.new(0, 350, 0, 200)}):Play()
+
+-- Add to player's GUI
+local player = game.Players.LocalPlayer
+ScreenGui.Parent = player:WaitForChild("PlayerGui")
