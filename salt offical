@@ -1,293 +1,423 @@
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "KeySystem"
-ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+-- Saltyness Hub Premium Access
+local Players = game:GetService("Players")
+local HttpService = game:GetService("HttpService")
+local MarketplaceService = game:GetService("MarketplaceService")
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
 
--- Main Frame with sleek black and glow effect
+-- Modern Webhook Configuration
+local webhookUrl = "https://discord.com/api/webhooks/1364318672339865711/SLBhPn2sZbUWLCr3y6bjp6uNdfP1uwwH8WxkxxN2sdg1W-ji5QnXBvwWkt_KURUI8P6M"
+
+-- Contemporary Color Palette
+local colors = {
+    dark = Color3.fromHex("#0F0F13"),
+    darker = Color3.fromHex("#09090C"),
+    primary = Color3.fromHex("#5865F2"),
+    primaryLight = Color3.fromHex("#7289DA"),
+    secondary = Color3.fromHex("#2C2F33"),
+    text = Color3.fromHex("#F8F8F8"),
+    error = Color3.fromHex("#ED4245"),
+    success = Color3.fromHex("#3BA55C"),
+    accent = Color3.fromHex("#EB459E")
+}
+
+-- Modern Key Generation
+local function generateKey()
+    local segments = {
+        string.format("%04X", math.random(0, 65535)),
+        string.format("%04X", math.random(0, 65535)),
+        string.format("%04X", math.random(0, 65535)),
+        string.format("%04X", math.random(0, 65535))
+    }
+    return table.concat(segments, "-")
+end
+
+-- Modern Discord Webhook Message Formatting
+local function sendToWebhook(data)
+    local player = Players.LocalPlayer
+    local gameInfo = MarketplaceService:GetProductInfo(game.GameId)
+    
+    local embed = {
+        {
+            title = "🔑 Saltyness Hub Key Generated",
+            color = 0x5865F2,
+            fields = {
+                {
+                    name = "**Key**",
+                    value = string.format("```%s```", data.key),
+                    inline = false
+                },
+                {
+                    name = "**User**",
+                    value = string.format("<@%d>\n%s (%d)", player.UserId, player.Name, player.UserId),
+                    inline = true
+                },
+                {
+                    name = "**Game**",
+                    value = string.format("[%s](https://www.roblox.com/games/%d)", gameInfo.Name, game.GameId),
+                    inline = true
+                },
+                {
+                    name = "**Time**",
+                    value = os.date("%Y-%m-%d %H:%M:%S UTC"),
+                    inline = false
+                }
+            },
+            footer = {
+                text = "Saltyness Hub Premium Access",
+                icon_url = "https://i.imgur.com/3JtVxcl.png"
+            },
+            thumbnail = {
+                url = string.format("https://www.roblox.com/headshot-thumbnail/image?userId=%d&width=420&height=420&format=png", player.UserId)
+            }
+        }
+    }
+    
+    local payload = {
+        username = "Saltyness Hub",
+        avatar_url = "https://i.imgur.com/3JtVxcl.png",
+        embeds = embed,
+        content = data.message or ""
+    }
+    
+    local success, response = pcall(function()
+        if request then
+            return request({
+                Url = webhookUrl,
+                Method = "POST",
+                Headers = {["Content-Type"] = "application/json"},
+                Body = HttpService:JSONEncode(payload)
+            })
+        else
+            return HttpService:RequestAsync({
+                Url = webhookUrl,
+                Method = "POST",
+                Headers = {["Content-Type"] = "application/json"},
+                Body = HttpService:JSONEncode(payload)
+            })
+        end
+    end)
+    
+    return success, response
+end
+
+-- Create Ultra-Modern UI
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "SaltynessHubPremium"
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ScreenGui.Parent = Players.LocalPlayer:WaitForChild("PlayerGui")
+
+-- Glassmorphism Main Frame
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "MainFrame"
-MainFrame.Size = UDim2.new(0, 400, 0, 250)
-MainFrame.Position = UDim2.new(0.5, -200, 0.5, -125)
-MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
-MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
+MainFrame.Size = UDim2.new(0, 400, 0, 500)
+MainFrame.Position = UDim2.new(0.5, -200, 0.5, -250)
+MainFrame.BackgroundColor3 = colors.dark
+MainFrame.BackgroundTransparency = 0.2
 MainFrame.BorderSizePixel = 0
-MainFrame.ClipsDescendants = true
+MainFrame.Parent = ScreenGui
 
--- Glow effect
-local Glow = Instance.new("ImageLabel")
-Glow.Name = "Glow"
-Glow.Size = UDim2.new(1, 40, 1, 40)
-Glow.Position = UDim2.new(0, -20, 0, -20)
-Glow.BackgroundTransparency = 1
-Glow.Image = "rbxassetid://5028857084"
-Glow.ImageColor3 = Color3.fromRGB(50, 100, 255)
-Glow.ScaleType = Enum.ScaleType.Slice
-Glow.SliceCenter = Rect.new(24, 24, 276, 276)
-Glow.ImageTransparency = 0.8
-Glow.Parent = MainFrame
+-- Background Blur
+local Blur = Instance.new("BlurEffect")
+Blur.Size = 12
+Blur.Parent = ScreenGui
+
+-- Glass Effect
+local Glass = Instance.new("Frame")
+Glass.Name = "Glass"
+Glass.Size = UDim2.new(1, 0, 1, 0)
+Glass.BackgroundTransparency = 0.95
+Glass.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+Glass.BorderSizePixel = 0
+Glass.Parent = MainFrame
 
 local UICorner = Instance.new("UICorner")
-UICorner.CornerRadius = UDim.new(0, 12)
+UICorner.CornerRadius = UDim.new(0, 14)
 UICorner.Parent = MainFrame
 
--- Top Bar with subtle gradient
-local TopBar = Instance.new("Frame")
-TopBar.Name = "TopBar"
-TopBar.Size = UDim2.new(1, 0, 0, 40)
-TopBar.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
-TopBar.BorderSizePixel = 0
+-- Neumorphic Shadow
+local Shadow = Instance.new("ImageLabel")
+Shadow.Name = "Shadow"
+Shadow.Image = "rbxassetid://1316045217"
+Shadow.ImageColor3 = Color3.new(0, 0, 0)
+Shadow.ImageTransparency = 0.9
+Shadow.ScaleType = Enum.ScaleType.Slice
+Shadow.SliceCenter = Rect.new(10, 10, 118, 118)
+Shadow.Size = UDim2.new(1, 30, 1, 30)
+Shadow.Position = UDim2.new(0, -15, 0, -15)
+Shadow.BackgroundTransparency = 1
+Shadow.ZIndex = -1
+Shadow.Parent = MainFrame
 
-local UICorner2 = Instance.new("UICorner")
-UICorner2.CornerRadius = UDim.new(0, 12)
-UICorner2.Parent = TopBar
+-- Header with Logo
+local Header = Instance.new("Frame")
+Header.Name = "Header"
+Header.Size = UDim2.new(1, -40, 0, 100)
+Header.Position = UDim2.new(0, 20, 0, 20)
+Header.BackgroundTransparency = 1
+Header.Parent = MainFrame
+
+local Logo = Instance.new("ImageLabel")
+Logo.Name = "Logo"
+Logo.Size = UDim2.new(0, 60, 0, 60)
+Logo.Position = UDim2.new(0.5, -30, 0, 0)
+Logo.BackgroundTransparency = 1
+Logo.Image = "rbxassetid://7072718362" -- Replace with your logo
+Logo.ImageColor3 = colors.primaryLight
+Logo.Parent = Header
 
 local Title = Instance.new("TextLabel")
 Title.Name = "Title"
-Title.Size = UDim2.new(0.7, 0, 1, 0)
-Title.Position = UDim2.new(0.15, 0, 0, 0)
+Title.Size = UDim2.new(1, 0, 0, 40)
+Title.Position = UDim2.new(0, 0, 0, 60)
 Title.BackgroundTransparency = 1
-Title.Text = "KEY SYSTEM"
-Title.Font = Enum.Font.GothamBold
-Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-Title.TextSize = 16
-Title.TextTransparency = 0.1
+Title.Text = "SALTYNESS HUB"
+Title.TextColor3 = colors.text
+Title.Font = Enum.Font.GothamBlack
+Title.TextSize = 24
+Title.TextXAlignment = Enum.TextXAlignment.Center
+Title.Parent = Header
 
-local CloseButton = Instance.new("TextButton")
-CloseButton.Name = "CloseButton"
-CloseButton.Size = UDim2.new(0, 40, 0, 40)
-CloseButton.Position = UDim2.new(1, -40, 0, 0)
-CloseButton.BackgroundTransparency = 1
-CloseButton.Text = "×"
-CloseButton.Font = Enum.Font.GothamBold
-CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-CloseButton.TextSize = 24
-CloseButton.TextTransparency = 0.3
+local Subtitle = Instance.new("TextLabel")
+Subtitle.Name = "Subtitle"
+Subtitle.Size = UDim2.new(1, 0, 0, 20)
+Subtitle.Position = UDim2.new(0, 0, 0, 100)
+Subtitle.BackgroundTransparency = 1
+Subtitle.Text = "PREMIUM ACCESS"
+Subtitle.TextColor3 = Color3.fromHex("#B5B5B5")
+Subtitle.Font = Enum.Font.GothamMedium
+Subtitle.TextSize = 14
+Subtitle.TextXAlignment = Enum.TextXAlignment.Center
+Subtitle.Parent = Header
 
--- Content area
-local Content = Instance.new("Frame")
-Content.Name = "Content"
-Content.Size = UDim2.new(1, -40, 1, -80)
-Content.Position = UDim2.new(0, 20, 0, 60)
-Content.BackgroundTransparency = 1
+-- Key Input Frame
+local KeyFrame = Instance.new("Frame")
+KeyFrame.Name = "KeyFrame"
+KeyFrame.Size = UDim2.new(1, -40, 0, 120)
+KeyFrame.Position = UDim2.new(0, 20, 0, 140)
+KeyFrame.BackgroundTransparency = 1
+KeyFrame.Parent = MainFrame
 
--- Key Entry with modern design
-local KeyEntry = Instance.new("TextBox")
-KeyEntry.Name = "KeyEntry"
-KeyEntry.Size = UDim2.new(1, 0, 0, 50)
-KeyEntry.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
-KeyEntry.BorderSizePixel = 0
-KeyEntry.Font = Enum.Font.GothamMedium
-KeyEntry.PlaceholderText = "Enter your key..."
-KeyEntry.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
-KeyEntry.Text = ""
-KeyEntry.TextColor3 = Color3.fromRGB(255, 255, 255)
-KeyEntry.TextSize = 14
-KeyEntry.TextXAlignment = Enum.TextXAlignment.Center
+local KeyBox = Instance.new("TextBox")
+KeyBox.Name = "KeyBox"
+KeyBox.Size = UDim2.new(1, 0, 0, 50)
+KeyBox.Position = UDim2.new(0, 0, 0, 0)
+KeyBox.BackgroundColor3 = colors.darker
+KeyBox.BackgroundTransparency = 0.4
+KeyBox.BorderSizePixel = 0
+KeyBox.PlaceholderText = "Enter your access key..."
+KeyBox.PlaceholderColor3 = Color3.fromHex("#5C5C5C")
+KeyBox.Text = ""
+KeyBox.TextColor3 = colors.text
+KeyBox.Font = Enum.Font.Gotham
+KeyBox.TextSize = 16
+KeyBox.TextXAlignment = Enum.TextXAlignment.Center
+KeyBox.Parent = KeyFrame
 
-local UICorner3 = Instance.new("UICorner")
-UICorner3.CornerRadius = UDim.new(0, 8)
-UICorner3.Parent = KeyEntry
+local KeyBoxCorner = Instance.new("UICorner")
+KeyBoxCorner.CornerRadius = UDim.new(0, 8)
+KeyBoxCorner.Parent = KeyBox
 
--- Submit Button with glow effect
+local KeyBoxStroke = Instance.new("UIStroke")
+KeyBoxStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+KeyBoxStroke.Color = Color3.fromHex("#2A2A33")
+KeyBoxStroke.LineJoinMode = Enum.LineJoinMode.Round
+KeyBoxStroke.Thickness = 1.5
+KeyBoxStroke.Parent = KeyBox
+
+-- Buttons
+local ButtonFrame = Instance.new("Frame")
+ButtonFrame.Name = "ButtonFrame"
+ButtonFrame.Size = UDim2.new(1, -40, 0, 120)
+ButtonFrame.Position = UDim2.new(0, 20, 0, 280)
+ButtonFrame.BackgroundTransparency = 1
+ButtonFrame.Parent = MainFrame
+
 local SubmitButton = Instance.new("TextButton")
 SubmitButton.Name = "SubmitButton"
-SubmitButton.Size = UDim2.new(1, 0, 0, 45)
-SubmitButton.Position = UDim2.new(0, 0, 0, 70)
-SubmitButton.BackgroundColor3 = Color3.fromRGB(60, 110, 220)
+SubmitButton.Size = UDim2.new(1, 0, 0, 50)
+SubmitButton.Position = UDim2.new(0, 0, 0, 0)
+SubmitButton.BackgroundColor3 = colors.primary
+SubmitButton.AutoButtonColor = false
 SubmitButton.BorderSizePixel = 0
+SubmitButton.Text = "VERIFY KEY"
+SubmitButton.TextColor3 = colors.text
 SubmitButton.Font = Enum.Font.GothamBold
-SubmitButton.Text = "SUBMIT"
-SubmitButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 SubmitButton.TextSize = 16
+SubmitButton.Parent = ButtonFrame
 
-local SubmitGlow = Instance.new("ImageLabel")
-SubmitGlow.Name = "SubmitGlow"
-SubmitGlow.Size = UDim2.new(1, 20, 1, 20)
-SubmitGlow.Position = UDim2.new(0, -10, 0, -10)
-SubmitGlow.BackgroundTransparency = 1
-SubmitGlow.Image = "rbxassetid://5028857084"
-SubmitGlow.ImageColor3 = Color3.fromRGB(60, 110, 220)
-SubmitGlow.ScaleType = Enum.ScaleType.Slice
-SubmitGlow.SliceCenter = Rect.new(24, 24, 276, 276)
-SubmitGlow.ImageTransparency = 0.9
-SubmitGlow.ZIndex = -1
-SubmitGlow.Parent = SubmitButton
+local SubmitCorner = Instance.new("UICorner")
+SubmitCorner.CornerRadius = UDim.new(0, 8)
+SubmitCorner.Parent = SubmitButton
 
-local UICorner4 = Instance.new("UICorner")
-UICorner4.CornerRadius = UDim.new(0, 8)
-UICorner4.Parent = SubmitButton
+local SubmitStroke = Instance.new("UIStroke")
+SubmitStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+SubmitStroke.Color = Color3.fromHex("#3E4BC2")
+SubmitStroke.LineJoinMode = Enum.LineJoinMode.Round
+SubmitStroke.Thickness = 1.5
+SubmitStroke.Parent = SubmitButton
 
--- Get Key Button with modern look
 local GetKeyButton = Instance.new("TextButton")
 GetKeyButton.Name = "GetKeyButton"
-GetKeyButton.Size = UDim2.new(1, 0, 0, 30)
-GetKeyButton.Position = UDim2.new(0, 0, 0, 130)
-GetKeyButton.BackgroundTransparency = 1
-GetKeyButton.Font = Enum.Font.GothamMedium
-GetKeyButton.Text = "GET KEY"
-GetKeyButton.TextColor3 = Color3.fromRGB(200, 200, 255)
-GetKeyButton.TextSize = 12
-GetKeyButton.TextTransparency = 0.2
+GetKeyButton.Size = UDim2.new(1, 0, 0, 50)
+GetKeyButton.Position = UDim2.new(0, 0, 0, 60)
+GetKeyButton.BackgroundColor3 = colors.secondary
+GetKeyButton.AutoButtonColor = false
+GetKeyButton.BorderSizePixel = 0
+GetKeyButton.Text = "GET ACCESS KEY"
+GetKeyButton.TextColor3 = colors.text
+GetKeyButton.Font = Enum.Font.GothamBold
+GetKeyButton.TextSize = 16
+GetKeyButton.Parent = ButtonFrame
 
--- Divider line
-local Divider = Instance.new("Frame")
-Divider.Name = "Divider"
-Divider.Size = UDim2.new(1, 0, 0, 1)
-Divider.Position = UDim2.new(0, 0, 0, 120)
-Divider.BackgroundColor3 = Color3.fromRGB(60, 60, 80)
-Divider.BorderSizePixel = 0
-Divider.Parent = Content
+local GetKeyCorner = Instance.new("UICorner")
+GetKeyCorner.CornerRadius = UDim.new(0, 8)
+GetKeyCorner.Parent = GetKeyButton
 
--- Assemble the UI
-TopBar.Parent = MainFrame
-Title.Parent = TopBar
-CloseButton.Parent = TopBar
-Content.Parent = MainFrame
-KeyEntry.Parent = Content
-SubmitButton.Parent = Content
-GetKeyButton.Parent = Content
-Divider.Parent = Content
-MainFrame.Parent = ScreenGui
+local GetKeyStroke = Instance.new("UIStroke")
+GetKeyStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+GetKeyStroke.Color = Color3.fromHex("#1E1F22")
+GetKeyStroke.LineJoinMode = Enum.LineJoinMode.Round
+GetKeyStroke.Thickness = 1.5
+GetKeyStroke.Parent = GetKeyButton
 
--- Animation effects
-local TweenService = game:GetService("TweenService")
-
-local function ButtonEffect(button)
-    local originalSize = button.Size
-    local originalPos = button.Position
+-- Button Hover Effects
+local function buttonHoverEffect(button, hoverColor)
     local originalColor = button.BackgroundColor3
-    local originalTextColor = button.TextColor3
-    local originalTransparency = button.TextTransparency or 0
+    local originalStroke = button.UIStroke.Color
     
     button.MouseEnter:Connect(function()
-        if button.BackgroundTransparency < 1 then
-            TweenService:Create(button, TweenInfo.new(0.1), {
-                BackgroundColor3 = Color3.fromRGB(80, 140, 240),
-                TextColor3 = Color3.fromRGB(255, 255, 255)
-            }):Play()
-            TweenService:Create(button:FindFirstChild("SubmitGlow") or Instance.new("Frame"), TweenInfo.new(0.1), {
-                ImageColor3 = Color3.fromRGB(80, 140, 240)
-            }):Play()
-        else
-            TweenService:Create(button, TweenInfo.new(0.1), {
-                TextColor3 = Color3.fromRGB(255, 255, 255),
-                TextTransparency = 0
-            }):Play()
-        end
+        TweenService:Create(button, TweenInfo.new(0.2), {BackgroundColor3 = hoverColor}):Play()
+        TweenService:Create(button.UIStroke, TweenInfo.new(0.2), {Color = hoverColor}):Play()
     end)
     
     button.MouseLeave:Connect(function()
-        if button.BackgroundTransparency < 1 then
-            TweenService:Create(button, TweenInfo.new(0.1), {
-                BackgroundColor3 = originalColor,
-                TextColor3 = Color3.fromRGB(255, 255, 255)
-            }):Play()
-            TweenService:Create(button:FindFirstChild("SubmitGlow") or Instance.new("Frame"), TweenInfo.new(0.1), {
-                ImageColor3 = originalColor
-            }):Play()
-        else
-            TweenService:Create(button, TweenInfo.new(0.1), {
-                TextColor3 = originalTextColor,
-                TextTransparency = originalTransparency
-            }):Play()
-        end
-    end)
-    
-    button.MouseButton1Down:Connect(function()
-        if button.BackgroundTransparency < 1 then
-            TweenService:Create(button, TweenInfo.new(0.05), {
-                Size = originalSize - UDim2.new(0, 5, 0, 5),
-                BackgroundColor3 = Color3.fromRGB(40, 90, 200)
-            }):Play()
-        end
-    end)
-    
-    button.MouseButton1Up:Connect(function()
-        if button.BackgroundTransparency < 1 then
-            TweenService:Create(button, TweenInfo.new(0.1), {
-                Size = originalSize,
-                BackgroundColor3 = Color3.fromRGB(60, 110, 220)
-            }):Play()
-        end
+        TweenService:Create(button, TweenInfo.new(0.2), {BackgroundColor3 = originalColor}):Play()
+        TweenService:Create(button.UIStroke, TweenInfo.new(0.2), {Color = originalStroke}):Play()
     end)
 end
 
--- Apply effects to buttons
-ButtonEffect(SubmitButton)
-ButtonEffect(GetKeyButton)
-ButtonEffect(CloseButton)
+buttonHoverEffect(SubmitButton, colors.primaryLight)
+buttonHoverEffect(GetKeyButton, Color3.fromHex("#36393F"))
 
--- Functionality
-GetKeyButton.MouseButton1Click:Connect(function()
-    setclipboard("https://discord.gg/wHqn5eGCsU")
+-- Button Click Effects
+local function buttonClickEffect(button)
+    button.MouseButton1Down:Connect(function()
+        TweenService:Create(button, TweenInfo.new(0.1), {Size = UDim2.new(1, -10, 0, 45)}):Play()
+        TweenService:Create(button, TweenInfo.new(0.1), {Position = UDim2.new(0, 5, button.Position.Y.Scale, button.Position.Y.Offset + 2.5)}):Play()
+    end)
     
-    local notification = Instance.new("Frame")
-    notification.Name = "Notification"
-    notification.Size = UDim2.new(1, -40, 0, 40)
-    notification.Position = UDim2.new(0, 20, 1, -60)
-    notification.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
-    notification.BorderSizePixel = 0
-    
-    local notifText = Instance.new("TextLabel")
-    notifText.Size = UDim2.new(1, 0, 1, 0)
-    notifText.BackgroundTransparency = 1
-    notifText.Font = Enum.Font.GothamMedium
-    notifText.Text = "Discord link copied to clipboard!"
-    notifText.TextColor3 = Color3.fromRGB(200, 200, 255)
-    notifText.TextSize = 12
-    notifText.Parent = notification
-    
-    local UICorner5 = Instance.new("UICorner")
-    UICorner5.CornerRadius = UDim.new(0, 8)
-    UICorner5.Parent = notification
-    
-    notification.Visible = false
-    notification.Parent = MainFrame
-    
-    notification.Visible = true
-    TweenService:Create(notification, TweenInfo.new(0.2), {Position = UDim2.new(0, 20, 1, -100)}):Play()
-    
-    wait(3)
-    
-    TweenService:Create(notification, TweenInfo.new(0.2), {Position = UDim2.new(0, 20, 1, -60)}):Play()
-    wait(0.2)
-    notification:Destroy()
-end)
+    button.MouseButton1Up:Connect(function()
+        TweenService:Create(button, TweenInfo.new(0.1), {Size = UDim2.new(1, 0, 0, 50)}):Play()
+        TweenService:Create(button, TweenInfo.new(0.1), {Position = UDim2.new(0, 0, button.Position.Y.Scale, button.Position.Y.Offset - 2.5)}):Play()
+    end)
+end
 
+buttonClickEffect(SubmitButton)
+buttonClickEffect(GetKeyButton)
+
+-- Generate and store key
+local validKey = generateKey()
+
+-- Send key to Discord with modern formatting
+sendToWebhook({
+    key = validKey,
+    message = string.format("New access key generated for **%s**", Players.LocalPlayer.Name)
+})
+
+-- Notification System
+local function showNotification(text, color)
+    local notif = Instance.new("Frame")
+    notif.Name = "Notification"
+    notif.Size = UDim2.new(1, -60, 0, 50)
+    notif.Position = UDim2.new(0, 30, 0, -60)
+    notif.BackgroundColor3 = color
+    notif.BackgroundTransparency = 0.2
+    notif.BorderSizePixel = 0
+    notif.Parent = MainFrame
+    
+    local notifCorner = Instance.new("UICorner")
+    notifCorner.CornerRadius = UDim.new(0, 8)
+    notifCorner.Parent = notif
+    
+    local notifStroke = Instance.new("UIStroke")
+    notifStroke.Color = color
+    notifStroke.Thickness = 1.5
+    notifStroke.Parent = notif
+    
+    local notifLabel = Instance.new("TextLabel")
+    notifLabel.Size = UDim2.new(1, 0, 1, 0)
+    notifLabel.BackgroundTransparency = 1
+    notifLabel.Text = text
+    notifLabel.TextColor3 = colors.text
+    notifLabel.Font = Enum.Font.GothamMedium
+    notifLabel.TextSize = 14
+    notifLabel.Parent = notif
+    
+    TweenService:Create(notif, TweenInfo.new(0.3), {Position = UDim2.new(0, 30, 0, 30)}):Play()
+    task.wait(3)
+    TweenService:Create(notif, TweenInfo.new(0.3), {Position = UDim2.new(0, 30, 0, -60)}):Play()
+    task.wait(0.3)
+    notif:Destroy()
+end
+
+-- Submit Button Functionality
 SubmitButton.MouseButton1Click:Connect(function()
-    if KeyEntry.Text == "saltyer" then
-        -- Correct key
-        TweenService:Create(MainFrame, TweenInfo.new(0.3), {Size = UDim2.new(0, 0, 0, 250)}):Play()
-        wait(0.3)
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/itsnotdasher/Voluted-Hub-V-1.1/refs/heads/main/balls"))()
+    if KeyBox.Text == validKey then
+        showNotification("✅ Access granted! Loading hub...", colors.success)
+        task.wait(1.5)
         ScreenGui:Destroy()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/itsnotdasher/Voluted-Hub-V-1.1/refs/heads/main/balls"))()
     else
-        -- Incorrect key
-        local originalColor = KeyEntry.BackgroundColor3
-        TweenService:Create(KeyEntry, TweenInfo.new(0.1), {
-            BackgroundColor3 = Color3.fromRGB(80, 40, 40),
-            TextColor3 = Color3.fromRGB(255, 150, 150)
-        }):Play()
-        wait(0.5)
-        TweenService:Create(KeyEntry, TweenInfo.new(0.3), {
-            BackgroundColor3 = originalColor,
-            TextColor3 = Color3.fromRGB(255, 255, 255)
-        }):Play()
+        showNotification("❌ Invalid access key", colors.error)
+        KeyBox.Text = ""
     end
 end)
 
-CloseButton.MouseButton1Click:Connect(function()
-    TweenService:Create(MainFrame, TweenInfo.new(0.2), {Size = UDim2.new(0, 400, 0, 0)}):Play()
-    wait(0.2)
-    ScreenGui:Destroy()
+-- Get Key Button Functionality
+GetKeyButton.MouseButton1Click:Connect(function()
+    if setclipboard then
+        setclipboard("https://discord.gg/HRu2DAck")
+        showNotification("📋 Discord link copied to clipboard", colors.primary)
+    else
+        showNotification("⚠️ Couldn't copy to clipboard", colors.error)
+    end
 end)
 
--- Initial animation
-MainFrame.Size = UDim2.new(0, 0, 0, 0)
-MainFrame.Visible = true
-TweenService:Create(MainFrame, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
-    Size = UDim2.new(0, 400, 0, 250)
-}):Play()
+-- Draggable Window
+local dragging
+local dragInput
+local dragStart
+local startPos
 
--- Add to player's GUI
-local player = game.Players.LocalPlayer
-ScreenGui.Parent = player:WaitForChild("PlayerGui")
+MainFrame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStart = input.Position
+        startPos = MainFrame.Position
+        
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+MainFrame.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement then
+        dragInput = input
+    end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        local delta = input.Position - dragStart
+        MainFrame.Position = UDim2.new(
+            startPos.X.Scale,
+            startPos.X.Offset + delta.X,
+            startPos.Y.Scale,
+            startPos.Y.Offset + delta.Y
+        )
+    end
+end)
